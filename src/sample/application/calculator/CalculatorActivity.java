@@ -17,6 +17,8 @@ public class CalculatorActivity extends Activity {
 	String enzan,hoji;
 	
 	String strTemp="";
+	String strResult="0";
+	int operator =0;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -123,100 +125,29 @@ public class CalculatorActivity extends Activity {
     
     public void functionKeyonClick(){
     	
-    	
+    	//保留
     }
     
     public void operatorKeyOnClick(View v){
-    	Button btn = (Button)v;
+    	if(operator!= 0){
+    		if(strTemp.length()>0){
+    			this.strResult= doCalc();
+    			showNumber(strResult);
+    		}
+    	}
+    	else{
+    		if(strTemp.length()>0){
+    			strResult = strTemp;
+    		}
+    	}
     	
+    	strTemp ="";
     	
-    	
-    	TextView tv = (TextView)findViewById(R.id.displayPanel);
-    	
-    	
-    	
-    	//Log.d("Integer",iii.doubleValue());
-
-    	//i = Integer.valueOf(tv.getText().toString());
-    	
-    	
-    	
-//    	try{
-//    	switch(btn.getId()){
-//    	case R.id.keypadAdd:
-//    		i = i+Integer.valueOf(tv.getText().toString());
-//    		Log.d("enzan",enzan);
-//    		break;
-//    	case R.id.keypadSub:
-//    		i = i-Integer.valueOf(tv.getText().toString());
-//    		break;
-//    	case R.id.keypadMulti:
-//    		i = i*Integer.valueOf(tv.getText().toString());
-//    		break;
-//    	case R.id.keypadDiv:
-//    		i = i/Integer.valueOf(tv.getText().toString());
-//    	
-//    	}
-//    	}catch(Exception e){
-//    		tv.setText("エラーです");
-//    	}
-    	
-    	
-    	try{
-        	switch(btn.getId()){
-        	case R.id.keypadAdd:
-        		enzan = btn.getText().toString();
-        		j=Double.valueOf(tv.getText().toString());
-        		tv.setText("0");
-        		hoji = tv.getText().toString();
-        		tv = (TextView)findViewById(R.id.enzan);
-        		tv.setText("+");
-        		Log.d("enzan",enzan);
-        		break;
-        	case R.id.keypadSub:
-        		enzan = btn.getText().toString();
-        		j=Double.valueOf(tv.getText().toString());
-        		hoji = tv.getText().toString();
-        		tv.setText("0");
-        		tv = (TextView)findViewById(R.id.enzan);
-        		tv.setText("-");        		
-        		break;
-        	case R.id.keypadMulti:
-        		enzan = btn.getText().toString();
-        		j=Double.valueOf(tv.getText().toString());
-        		hoji = tv.getText().toString();
-        		tv.setText("0");
-        		tv = (TextView)findViewById(R.id.enzan);
-        		tv.setText("*");
-        		break;
-        	case R.id.keypadDiv:
-        		enzan = btn.getText().toString();
-        		j=Double.valueOf(tv.getText().toString());
-        		hoji = tv.getText().toString();
-        		tv.setText("0");
-        		tv = (TextView)findViewById(R.id.enzan);
-        		tv.setText("/");
-        		break;        	
-        	case R.id.keypadEq:
-        		//i=Integer.valueOf(tv.getText().toString());
-        		tv.setText(doCalc());
-        		
-        		break;
-        	}
-        	}catch(Exception e){
-        		tv.setText("エラーです");
-        	}
-    	
-    	
-    	//tv.setText(i.toString());
-    	
-  	
-    	
-    	
-    	//Integer.valueOf(str);
-    	
-    	
-    	
+    	if(v.getId()==R.id.keypadEq){
+    		operator=0;
+    	}else{
+    		operator=v.getId();
+    		}
     }
     
 
