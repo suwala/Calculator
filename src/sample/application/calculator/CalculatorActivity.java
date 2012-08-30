@@ -214,8 +214,8 @@ public class CalculatorActivity extends Activity {
     		result = bd1.multiply(bd2);
     		break;
     	case R.id.keypadDiv:
-    		if(bd2.equals(BigDecimal.ZERO)){
-    			result = bd1.divide(bd2,12,3);
+    		if(!bd2.equals(BigDecimal.ZERO)){
+    			result = bd1.divide(bd2,8,3);
     		}else{
     			Toast toast = Toast.makeText(this,R.string.toast_div_by_zero,10000);
     			toast.show();
@@ -224,6 +224,7 @@ public class CalculatorActivity extends Activity {
     	}
     	
     	if(result.toString().indexOf(".")>=0){
+    		Log.d("docalc",result.toString());
     		return result.toString().replaceAll("¥¥.0+$|0+$", "");
     	}else{
     		return result.toString();
