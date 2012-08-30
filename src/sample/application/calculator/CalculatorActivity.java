@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CalculatorActivity extends Activity {
 
@@ -18,7 +19,7 @@ public class CalculatorActivity extends Activity {
 	
 	String strTemp="";
 	String strResult="0";
-	int operator =0;
+	Integer operator =0;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,7 @@ public class CalculatorActivity extends Activity {
     
     public void numKeyOnClick(View v){
     	
-    	//-----------教科書------------
+    	//-----------教科書-----------↓
     	
     	String strInKey = (String)((Button)v).getText();
     	
@@ -44,8 +45,8 @@ public class CalculatorActivity extends Activity {
     		if(this.strTemp.length() == 0){
     			this.strTemp = "0.";
     		}else{
-    			if(strTemp.indexOf(".") == -1){
-    				strTemp=strTemp+".";
+    			if(this.strTemp.indexOf(".") == -1){
+    				this.strTemp=this.strTemp+".";
     			}
     		}    		
     	}else{
@@ -55,14 +56,14 @@ public class CalculatorActivity extends Activity {
     	//this.strTempはいらない？直接thisしる
     	this.showNumber(this.strTemp);
     	
-    	//------教科書------
+    	//------教科書------↑
     	
+    	
+    	/*
     	Button button = (Button)v;   	
     	
     	TextView tv = (TextView)findViewById(R.id.displayPanel);
-    	//ここまで
-    	
-    	/*	/////
+ 
     	    	
     	//String 比較めそっどeauals
     	
@@ -131,8 +132,8 @@ public class CalculatorActivity extends Activity {
     public void operatorKeyOnClick(View v){
     	if(operator!= 0){
     		if(strTemp.length()>0){
-    			this.strResult= doCalc();
-    			showNumber(strResult);
+    			this.strResult= this.doCalc();
+    			this.showNumber(strResult);
     		}
     	}
     	else{
@@ -149,8 +150,6 @@ public class CalculatorActivity extends Activity {
     		operator=v.getId();
     		}
     }
-    
-
     
     private void showNumber(String strNum){
     	
@@ -177,7 +176,7 @@ public class CalculatorActivity extends Activity {
     
      
     private String doCalc(){
-    	
+    	/*
     	BigDecimal bd = new BigDecimal(this.j);
     	
     	BigDecimal i = new BigDecimal(this.i);
@@ -192,11 +191,46 @@ public class CalculatorActivity extends Activity {
     		bd = bd.divide(i);
     	
 
-    	if(j-j.intValue()==0)
-    		return String.valueOf(j.intValue());
+//    	if(j-j.intValue()==0)
+//    		return String.valueOf(j.intValue());
     	
     	Log.d("enzan",bd.toString());
     	return bd.toString();
     	//if (double)j-(int)j == 0なら整数？; "."消去可能？(int)で返す？
-    }
+    }---------教科書↓-----------*/
+    	
+    	BigDecimal bd1 = new BigDecimal(strResult);
+    	BigDecimal bd2 = new BigDecimal(strTemp);
+    	BigDecimal result = BigDecimal.ZERO;
+    	
+    	switch(operator){
+    	case R.id.keypadAdd:
+    		result = bd1.add(bd2);
+    		break;
+    	case R.id.keypadSub:
+    		result = bd1.subtract(bd2);
+    		break;
+    	case R.id.keypadMulti:
+    		result = bd1.multiply(bd2);
+    		break;
+    	case R.id.keypadDiv:
+    		if(bd2.equals(BigDecimal.ZERO)){
+    			result = bd1.divide(bd2,12,3);
+    		}else{
+    			Toast toast = Toast.makeText(this,R.string.toast_div_by_zero,10000);
+    			toast.show();
+    		}
+    		break;
+    	}
+    	
+    	if(result.toString().indexOf(".")>=0){
+    		return result.toString().replaceAll("¥¥.0+$|0+$", "");
+    	}else{
+    		return result.toString();
+    	}
+    		
+    		
+    	}
+    	
+    	
 }
