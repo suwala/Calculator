@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -14,21 +15,30 @@ import android.widget.Toast;
 
 public class CalculatorActivity extends Activity {
 
-	public Double i =(double) 0,j=0.0;
-	String enzan,hoji;
+	//public Double i =(double) 0,j=0.0;
+	public String enzan,hoji;
 	
-	String strTemp="";
-	String strResult="0";
-	Integer operator =0;
+	public String strTemp="";
+	public String strResult="0";
+	public Integer operator=0;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculator);
         
+        this.readPreferences();
     }
 
     @Override
+	protected void onStop() {
+		// TODO 自動生成されたメソッド・スタブ
+		super.onStop();
+		
+		this.writePreferences();
+	}
+
+	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_calculator, menu);
         return true;
@@ -130,14 +140,14 @@ public class CalculatorActivity extends Activity {
     }
     
     public void operatorKeyOnClick(View v){
-    	if(operator!= 0){
-    		if(strTemp.length()>0){
+    	if(this.operator!= 0){
+    		if(strTemp.length() > 0){
     			this.strResult= this.doCalc();
-    			this.showNumber(strResult);
+    			this.showNumber(this.strResult);
     		}
     	}
     	else{
-    		if(strTemp.length()>0){
+    		if(this.strTemp.length()>0){
     			strResult = strTemp;
     		}
     	}
@@ -145,9 +155,9 @@ public class CalculatorActivity extends Activity {
     	strTemp ="";
     	
     	if(v.getId()==R.id.keypadEq){
-    		operator=0;
+    		this.operator=0;
     	}else{
-    		operator=v.getId();
+    		this.operator=v.getId();
     		}
     }
     
@@ -202,7 +212,7 @@ public class CalculatorActivity extends Activity {
     	BigDecimal bd1 = new BigDecimal(strResult);
     	BigDecimal bd2 = new BigDecimal(strTemp);
     	BigDecimal result = BigDecimal.ZERO;
-    	
+
     	switch(operator){
     	case R.id.keypadAdd:
     		result = bd1.add(bd2);
@@ -222,16 +232,34 @@ public class CalculatorActivity extends Activity {
     		}
     		break;
     	}
-    	
+
     	if(result.toString().indexOf(".")>=0){
     		Log.d("docalc",result.toString());
     		return result.toString().replaceAll("¥¥.0+$|0+$", "");
     	}else{
     		return result.toString();
     	}
-    		
-    		
-    	}
+    }
+    
+    public void writePreferences(){
+    	SharedPreferences prefs = getSharedPreferences("CalcPrefs", MODE_PRIVATE);
+    	SharedPreferences.Editor editor = prefs.edit();
+    	editor.putString("strTemp", strTemp);
+    	editor.putString("strResult", strResult);
+    	editor.putInt("operator",operator);
+    	editor.putString("strDisplay", ((TextView)findViewById(R.id.displayPanel)).getText().toString());
+    	editor.commit();
+}
+    
+    public void readPreferences(){
+    	SharedPreferences prefs = getSharedPreferences("CalcPrefs", MODE_PRIVATE);
+    	this.strTemp = prefs.getString("strTemp", "");
+    	this.strResult = prefs.getString("strResult", "0");
+    	this.operator = prefs.getInt("operator", 0);
+    	((TextView)findViewById(R.id.displayPanel)).setText(
+    			prefs.getString("strDisplay", "0"));
     	
+    	Log.d("cal","aaaa"+prefs.getString("strTemp", ""));
     	
+    }
 }
