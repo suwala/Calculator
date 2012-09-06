@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.text.ClipboardManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -134,9 +135,32 @@ public class CalculatorActivity extends Activity {
     	*/
     }
     
-    public void functionKeyonClick(){
+    public void functionKeyonClick(View v){
     	
-    	//保留
+    	switch (v.getId()) {
+		case R.id.keypadAC:
+			this.strTemp = "";
+			this.strResult = "0";
+			this.operator = 0;
+			TextView tv =(TextView)findViewById(R.id.enzan);
+			tv.setText("");
+			break;
+
+		case R.id.keypadC:
+			this.strTemp = "";
+			break;
+		case R.id.keypadBS:
+			if(this.strTemp.length() == 0)
+				return;
+			else
+				this.strTemp = this.strTemp.substring(0,strTemp.length()-1);
+			break;
+		case R.id.keypadCopy:
+			ClipboardManager cm = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+			cm.setText(((TextView)findViewById(R.id.displayPanel)).getText());
+			return;
+		}
+    	this.showNumber(this.strTemp);
     }
     
     public void operatorKeyOnClick(View v){
@@ -157,8 +181,16 @@ public class CalculatorActivity extends Activity {
     	if(v.getId()==R.id.keypadEq){
     		this.operator=0;
     	}else{
+
+        	TextView tv = (TextView)findViewById(R.id.enzan);
+        	TextView tv2 = (TextView)v;
+        	
+        	tv.setText(tv2.getText());
+    		
     		this.operator=v.getId();
     		}
+    	
+    	
     }
     
     private void showNumber(String strNum){
@@ -213,6 +245,7 @@ public class CalculatorActivity extends Activity {
     	BigDecimal bd2 = new BigDecimal(strTemp);
     	BigDecimal result = BigDecimal.ZERO;
 
+    	
     	switch(operator){
     	case R.id.keypadAdd:
     		result = bd1.add(bd2);
